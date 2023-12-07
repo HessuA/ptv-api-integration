@@ -3,7 +3,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2021-11-09 16:22:00
  * @Last Modified by:   Heikki Anttonen
- * @Last Modified time: 2023-12-03 03:16:45
+ * @Last Modified time: 2023-12-07 15:12:47
  *
  * @package ptv-api-integration-test
  */
@@ -37,7 +37,7 @@ function save_item( $item, $force ) {
 
   foreach ( $languages as $lang ) {
 
-    // Try to get WP post ID matching this item
+    // Try to get WP post ID and language matching this item
     $item_post_id = get_item_post_id_by_api_id( $item['id'], $lang );
   
     if ( $item_post_id ) {
