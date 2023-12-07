@@ -3,7 +3,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2021-11-09 16:06:10
  * @Last Modified by:   Heikki Anttonen
- * @Last Modified time: 2023-12-05 11:24:42
+ * @Last Modified time: 2023-12-07 13:50:31
  *
  * @package ptv-api-integration-test
  */
@@ -26,11 +26,14 @@ function sync( $force = false ) {
   update_option( prefix_key( 'sync_end' ), null ); // set end to null for extra cleanup prevention if problems
   update_option( prefix_key( 'sync_start' ), wp_date( 'Y-m-d H:i:s' ) );
 
+  $organization_id = '1ae7fc60-6dd6-4124-9445-be931b4b0953';
+
   // Get all services from current organization
   $response = call_api(
     'ServiceCollection/organization',
     [
-      'organizationId' => '1ae7fc60-6dd6-4124-9445-be931b4b0953',
+      'organizationId' => $organization_id,
+      'page'           => 1,
     ],
     [
       'timeout' => 30,
@@ -41,9 +44,30 @@ function sync( $force = false ) {
     return;
   }
 
+  // Save response item lists
+  $item_lists = $response['itemList'];
+
+  // Make sure you fetch all data, because api's page number is not allways one
+  $current_page = $response['pageNumber'] + 1;
+  while ( $current_page <= $response['pageCount'] ) {
+    $response = call_api(
+      'ServiceCollection/organization',
+      [
+        'organizationId' => $organization_id,
+        'page'           => $current_page,
+      ],
+      [
+        'timeout' => 30,
+      ]
+    );
+    $item_lists = array_merge( $item_lists, $response['itemList'] );
+    $current_page++;
+  }
+
+  // Save service items
   $services = [];
 
-  foreach ( $response['itemList'] as $item ) {
+  foreach ( $item_lists as $item ) {
     foreach ( $item['services'] as $service ) {
       $id = $service['id'];
 
@@ -68,6 +92,7 @@ function sync( $force = false ) {
 
   }
 
+  // Save data
   foreach ( $services as $item ) {
     save_item( $item, $force );
   }
