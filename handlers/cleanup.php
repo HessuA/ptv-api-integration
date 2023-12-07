@@ -2,8 +2,8 @@
 /**
  * @Author: Timi Wahalahti
  * @Date:   2021-11-09 16:30:06
- * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2021-11-09 17:37:51
+ * @Last Modified by:   Heikki Anttonen
+ * @Last Modified time: 2023-12-07 10:17:00
  *
  * @package ptv-api-integration-test
  */
@@ -31,7 +31,7 @@ function cleanup_items() {
       'relation'  => 'OR',
       [
         'key'     => prefix_key( 'sync_time', true ),
-        'value'   => wp_date( 'Y-m-d H:i:s', $date_compare->format( 'U' ) - ( HOUR_IN_SECONDS * 2 ) ), // get items that have not been synced in last two hours
+        'value'   => wp_date( 'Y-m-d H:i:s', $date_compare->format( 'U' ) - ( DAY_IN_SECONDS * 2 ) ), // get items that have not been synced in last two days
         'compare' => '<',
         'type'    => 'DATETIME',
       ],
