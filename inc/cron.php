@@ -3,7 +3,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2021-11-09 16:06:10
  * @Last Modified by:   Heikki Anttonen
- * @Last Modified time: 2023-12-07 13:50:31
+ * @Last Modified time: 2023-12-11 15:47:23
  *
  * @package ptv-api-integration-test
  */
@@ -99,7 +99,7 @@ function sync( $force = false ) {
 
   update_option( prefix_key( 'sync_end' ), wp_date( 'Y-m-d H:i:s' ) );
 
-  wp_schedule_single_event( time() + ( DAY_IN_SECONDS ), prefix_key( 'cleanup' ) );
+  wp_schedule_single_event( time() + ( DAY_IN_SECONDS * 5 ), prefix_key( 'cleanup' ) );
 } // end sync
 
 function cleanup() {
